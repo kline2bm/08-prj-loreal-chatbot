@@ -3,8 +3,14 @@ const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
 const chatWindow = document.getElementById("chatWindow");
 
-// Set initial message
-chatWindow.textContent = "👋 Hello! How can I help you today?";
+const basePrompt =
+  "You are a helpful assistant specialized in L’Oréal products, routines, and recommendations. Only answer questions related to these topics. If a question is unrelated to L’Oréal products, beauty routines, or beauty-related topics, politely refuse to answer and inform the user that you can only assist with L’Oréal-related inquiries.";
+const messages = [
+  {
+    role: "system",
+    content: basePrompt,
+  },
+];
 
 // Function to append a message to the chat window
 function appendMessage(sender, message) {
@@ -23,8 +29,9 @@ chatForm.addEventListener("submit", async (e) => {
   const userText = userInput.value.trim();
   if (!userText) return;
 
-  // Append user message
+  // Append user message to chat window and messages array
   appendMessage("user", userText);
+  messages.push({ role: "user", content: userText });
 
   // Clear input field
   userInput.value = "";
@@ -33,26 +40,25 @@ chatForm.addEventListener("submit", async (e) => {
   appendMessage("bot", "…thinking…");
 
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: "You are a helpful assistant specialized in L’Oréal products, routines, and recommendations. Only answer questions related to these topics. If a question is unrelated to L’Oréal products, beauty routines, or beauty-related topics, politely refuse to answer and inform the user that you can only assist with L’Oréal-related inquiries."
-          },
-          { role: "user", content: userText }
-        ]
-      })
-    });
+    console.log("Sending request to Cloudflare Worker...");
+    const response = await fetch(
+      "https://08-prj-loreal-chatbot.kline2bm.workers.dev/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: messages,
+        }),
+      }
+    );
+    console.log("Request sent, awaiting response...");
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Cloudflare Worker error: ${response.status} ${response.statusText}`
+      );
     }
 
     const data = await response.json();
@@ -64,10 +70,11 @@ chatForm.addEventListener("submit", async (e) => {
       loadingMessage.remove();
     }
 
-    // Append bot message
+    // Append bot message to chat window and messages array
     appendMessage("bot", botMessage);
-
+    messages.push({ role: "assistant", content: botMessage });
   } catch (error) {
+    console.error("Error during fetch:", error);
     // Remove the loading message
     const loadingMessage = chatWindow.querySelector(".bot-message:last-child");
     if (loadingMessage && loadingMessage.textContent === "…thinking…") {
@@ -78,3 +85,5 @@ chatForm.addEventListener("submit", async (e) => {
     console.error(error);
   }
 });
+
+appendMessage("bot", "👋 Hello! How can I help you today?");

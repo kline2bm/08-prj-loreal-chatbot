@@ -152,3 +152,29 @@ body {
 .site-footer a:hover {
   color: #FFD700; /* gold */
 }
+
+/* Chat message styles */
+.chat-message {
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 75%;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.user-message {
+  background-color: #FFD700; /* gold */
+  color: darkgoldenrod; /* dark green */
+  align-self: flex-end;
+  text-align: right;
+  margin-left: auto;
+}
+
+.bot-message {
+  background-color: #e2e3e5; /* light gray */
+  color: #41464b; /* dark gray */
+  align-self: flex-start;
+  text-align: left;
+  margin-right: auto;
+}
