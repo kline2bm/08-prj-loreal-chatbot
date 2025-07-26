@@ -42,6 +42,10 @@ chatForm.addEventListener("submit", async (e) => {
       body: JSON.stringify({
         model: "gpt-4",
         messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant specialized in L’Oréal products, routines, and recommendations. Only answer questions related to these topics. If a question is unrelated to L’Oréal products, beauty routines, or beauty-related topics, politely refuse to answer and inform the user that you can only assist with L’Oréal-related inquiries."
+          },
           { role: "user", content: userText }
         ]
       })
