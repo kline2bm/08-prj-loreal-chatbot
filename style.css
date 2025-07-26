@@ -165,7 +165,7 @@ body {
 
 .user-message {
   background-color: #FFD700; /* gold */
-  color: darkgoldenrod; /* dark green */
+  color: #41464B; /* dark gray */
   align-self: flex-end;
   text-align: right;
   margin-left: auto;
@@ -173,7 +173,7 @@ body {
 
 .bot-message {
   background-color: #e2e3e5; /* light gray */
-  color: #41464b; /* dark gray */
+  color: #41464B; /* dark gray */
   align-self: flex-start;
   text-align: left;
   margin-right: auto;

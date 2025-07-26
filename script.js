@@ -40,7 +40,6 @@ chatForm.addEventListener("submit", async (e) => {
   appendMessage("bot", "…thinking…");
 
   try {
-    console.log("Sending request to Cloudflare Worker...");
     const response = await fetch(
       "https://08-prj-loreal-chatbot.kline2bm.workers.dev/",
       {
@@ -53,7 +52,6 @@ chatForm.addEventListener("submit", async (e) => {
         }),
       }
     );
-    console.log("Request sent, awaiting response...");
 
     if (!response.ok) {
       throw new Error(
@@ -82,7 +80,6 @@ chatForm.addEventListener("submit", async (e) => {
     }
 
     appendMessage("bot", "Sorry, there was an error. Please try again.");
-    console.error(error);
   }
 });
 
